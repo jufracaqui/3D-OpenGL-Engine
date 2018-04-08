@@ -1,0 +1,38 @@
+#version 400 core
+
+in vec3 posicion;
+in vec2 coordenadasTextura;
+in vec3 normal;
+
+out vec2 pasar_coordenadasTextura;
+out vec3 normalesSuperficie;
+out vec3 vectorALuz;
+out vec3 vectorACamara;
+out float visibilidad;
+
+uniform mat4 matrizTransformada;
+uniform mat4 matrizProyeccion;
+uniform mat4 matrizVision;
+uniform vec3 posicionLuz;
+
+
+
+const float densidad = 0.0035;
+const float gradiente = 5;
+
+void main(){
+
+	vec4 posicionMundo = matrizTransformada * vec4(posicion, 1.0);
+	vec4 posicionRelativaACamara = matrizVision * posicionMundo;
+	gl_Position = matrizProyeccion * posicionRelativaACamara;
+	pasar_coordenadasTextura = coordenadasTextura;
+	
+	normalesSuperficie = (matrizTransformada * vec4(normal, 0.0)).xyz;
+	vectorALuz = posicionLuz - posicionMundo.xyz;
+	vectorACamara = (inverse(matrizVision) * vec4(0.0, 0.0, 0.0, 1.0)).xyz - posicionMundo.xyz;
+	
+	float distancia = length(posicionRelativaACamara);
+	visibilidad = exp(-pow((distancia * densidad), gradiente));
+	visibilidad = clamp(visibilidad, 0.0, 1.0);
+
+}

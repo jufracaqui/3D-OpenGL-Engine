@@ -1,0 +1,57 @@
+#version 400 core
+
+in vec2 pasar_coordenadasTextura;
+in vec3 normalesSuperficie;
+in vec3 vectorALuz;
+in vec3 vectorACamara;
+in float visibilidad;
+
+out vec4 salida_Color;
+
+uniform sampler2D texturaFondo;
+uniform sampler2D texturaR;
+uniform sampler2D texturaG;
+uniform sampler2D texturaB;
+uniform sampler2D mapaFundido;
+
+uniform vec3 colorLuz;
+uniform float cantidadBrillo;
+uniform float reflectividad;
+uniform vec3 colorCielo;
+
+void main(void){
+
+	vec4 colorMapaFundido = texture(mapaFundido, pasar_coordenadasTextura);
+	
+	float cantidadTexturaFondo = 1 - (colorMapaFundido.r + colorMapaFundido.g + colorMapaFundido.b);
+	vec2 tiledCoords = pasar_coordenadasTextura * 40.0;
+	vec4 colorTexturaFondo = texture(texturaFondo, tiledCoords) * cantidadTexturaFondo;
+	vec4 colorTexturaR = texture(texturaR, tiledCoords) * colorMapaFundido.r;
+	vec4 colorTexturaG = texture(texturaG, tiledCoords) * colorMapaFundido.g;
+	vec4 colorTexturaB = texture(texturaB, tiledCoords) * colorMapaFundido.b;
+	
+	vec4 colorTotal = colorTexturaFondo + colorTexturaR + colorTexturaG + colorTexturaB;
+
+	vec3 normalUnitario = normalize(normalesSuperficie);
+	vec3 vectorLuzUnitario = normalize(vectorALuz);
+	
+	float nDotl = dot(normalUnitario, vectorLuzUnitario);
+	float brillo = max(nDotl, 0.2);
+	vec3 difusion = brillo * colorLuz;
+	
+	vec3 normalVectorACamara = normalize(vectorACamara);
+	vec3 direccionLuz = -vectorLuzUnitario;
+	vec3 direccionLuzReflejada = reflect(direccionLuz, normalUnitario);
+	
+	float factorEspecular = dot(direccionLuzReflejada, normalVectorACamara);
+	factorEspecular = max(factorEspecular, 0.0);
+	float factorCantidadBrillo = pow(factorEspecular, cantidadBrillo);
+	vec3 especularFinal = factorCantidadBrillo * reflectividad * colorLuz;
+	
+	//Da problemas
+	vec4(difusion, 0.0) * colorTotal + vec4(especularFinal, 1.0);
+	
+	salida_Color = colorTotal + vec4(especularFinal, 1.0);
+	salida_Color = mix(vec4(colorCielo, 1.0), salida_Color, visibilidad);
+	
+}

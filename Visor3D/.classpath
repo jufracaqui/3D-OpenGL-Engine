@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+	<classpathentry kind="lib" path="G:/Proyecto/jars/lwjgl3 slick/slick-util3/ibxm.jar"/>
+	<classpathentry kind="lib" path="G:/Proyecto/jars/lwjgl3 slick/slick-util3/jogg-0.0.7.jar"/>
+	<classpathentry kind="lib" path="G:/Proyecto/jars/lwjgl3 slick/slick-util3/jorbis-0.0.15.jar"/>
+	<classpathentry kind="lib" path="G:/Proyecto/jars/lwjgl3 slick/slick-util3/slick-util3.jar"/>
+	<classpathentry kind="lib" path="G:/Proyecto/jars/lwjgl/jar/lwjgl.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/G:/Proyecto/jars/lwjgl/doc/javadoc/"/>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="G:/Proyecto/jars/lwjgl/native"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
